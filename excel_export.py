@@ -354,16 +354,29 @@ class ExcelReportGenerator:
             # Add instructions sheet
             instructions = pd.DataFrame({
                 'Instructions': [
+                    '🎯 HOW TO USE THIS FILE FOR BACKTESTING:',
+                    '',
                     '1. Modify the "Current Value" column to change strategy parameters',
                     '2. Save this file',
-                    '3. The backtest system will read these parameters',
-                    '4. Higher gap percentages = more selective but potentially more profitable',
-                    '5. Lower float = more volatile stocks',
-                    '6. Higher volume = more liquid stocks',
-                    '7. Test different combinations to optimize performance',
+                    '3. RESTART the program (python main.py)',
+                    '4. Run backtest - the system will automatically use these parameters!',
                     '',
-                    'IMPORTANT: Only modify the "Current Value" column!',
-                    'Keep all other columns unchanged.'
+                    '📌 IMPORTANT NOTES:',
+                    '• Parameters are loaded when the program STARTS',
+                    '• Changes take effect AFTER restarting the program',
+                    '• If this file exists, Excel parameters are used (NOT config.py)',
+                    '• To use config.py instead, delete or rename this Excel file',
+                    '',
+                    '💡 PARAMETER TIPS:',
+                    '• Higher gap percentages = more selective (fewer signals)',
+                    '• Lower float = more volatile stocks',
+                    '• Higher volume = more liquid stocks',
+                    '• Test different combinations to optimize performance',
+                    '',
+                    '⚠️ IMPORTANT: Only modify the "Current Value" column!',
+                    'Keep all other columns unchanged.',
+                    '',
+                    '📖 See PARAMETER_LOADING.md for complete documentation.'
                 ]
             })
             instructions.to_excel(writer, sheet_name='Instructions', index=False)

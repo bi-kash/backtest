@@ -56,6 +56,35 @@ python main.py
 
 The system creates `strategy_parameters_template.xlsx` where you can modify all strategy parameters without coding.
 
+**Important**: Parameters are read from Excel if the template exists, otherwise from config.py. See [PARAMETER_LOADING.md](PARAMETER_LOADING.md) for detailed explanation.
+
+## Parameter Configuration
+
+### Where Does the System Read Parameters From?
+
+For actual backtesting, the system reads parameters in this order:
+
+1. **Excel file** (`strategy_parameters_template.xlsx`) - **IF IT EXISTS** ✨ Recommended
+2. **config.py** - **IF Excel file doesn't exist**
+
+**See [PARAMETER_LOADING.md](PARAMETER_LOADING.md) for complete details on parameter loading.**
+
+### Quick Guide: Modifying Parameters
+
+#### Option A: Excel (Non-Programmers) ✨
+
+1. Run `python main.py` and choose option 5 (Create Parameter Template)
+2. Open `strategy_parameters_template.xlsx`
+3. Modify values in the "Current Value" column
+4. Save the file
+5. Restart the program - your changes are automatically used!
+
+#### Option B: config.py (Programmers)
+
+1. Delete the Excel template: `rm strategy_parameters_template.xlsx`
+2. Edit `config.py` directly
+3. Restart the program
+
 ## Excel Output Columns
 
 The system exports results with exactly the columns you requested:

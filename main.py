@@ -188,7 +188,14 @@ def create_template():
     filename = generator.create_parameter_template()
     
     print(f"\nParameter template created: {filename}")
-    print("You can modify parameters in Excel and the system will read them.")
+    print("\n📌 IMPORTANT: How parameters are used for backtesting:")
+    print("  1. If Excel template exists: Parameters are loaded FROM EXCEL")
+    print("  2. If Excel template doesn't exist: Parameters are loaded from config.py")
+    print("\nTo modify parameters:")
+    print("  • Open the Excel file and change 'Current Value' column")
+    print("  • Save the file")
+    print("  • Restart the program (parameters are loaded at startup)")
+    print("\nSee PARAMETER_LOADING.md for complete details.")
 
 def quick_test():
     """Quick test with recent volatile stocks"""
