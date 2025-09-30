@@ -5,6 +5,8 @@ import sys
 import os
 from datetime import datetime, timedelta
 from backtest_engine import BacktestEngine
+from data_fetcher import PolygonDataFetcher
+from excel_export import ExcelReportGenerator
 from config import Config
 
 def print_menu():
@@ -15,10 +17,11 @@ def print_menu():
     print("1. Run Full Backtest (All Strategies)")
     print("2. Test Single Stock")
     print("3. Optimize Strategy Parameters")
-    print("4. View/Edit Configuration")
-    print("5. Create Parameter Template")
+    print("4. Data Analysis Report")
+    print("5. Fetch Data Only") 
     print("6. Quick Test (Last 30 Days)")
-    print("7. Exit")
+    print("7. Cache Management")
+    print("8. Exit")
     print("="*50)
 
 def get_ticker_list():
@@ -191,25 +194,78 @@ def create_template():
     print("You can modify parameters in Excel and the system will read them.")
 
 def quick_test():
-    """Quick test with recent volatile stocks"""
+    """Quick test with recent data"""
     print("\n--- QUICK TEST (Last 30 Days) ---")
     
-    # Pre-selected volatile tickers that often have the patterns you're looking for
-    volatile_tickers = ['AMC', 'GME', 'SPRT', 'IRNT', 'OPAD', 'DWAC']
-    
+    # Use a small list of popular stocks
+    tickers = ['AAPL', 'MSFT', 'TSLA']
     today = datetime.now()
     start_date = (today - timedelta(days=30)).strftime('%Y-%m-%d')
     end_date = today.strftime('%Y-%m-%d')
     
-    print(f"Testing {', '.join(volatile_tickers)} from {start_date} to {end_date}")
+    print(f"Testing with: {', '.join(tickers)}")
+    print(f"Date range: {start_date} to {end_date}")
     
-    engine = BacktestEngine()
-    signals = engine.run_backtest(volatile_tickers, start_date, end_date)
+    # Initialize components
+    data_fetcher = PolygonDataFetcher()
+    backtest_engine = BacktestEngine()
     
-    if signals:
-        print(f"\nQuick test completed! Found {len(signals)} opportunities.")
+    # Run backtest
+    results = backtest_engine.run_backtest(tickers, start_date, end_date)
+    
+    if results:
+        print(f"\n✅ Quick test completed! Generated {len(results)} trades.")
+        # Optional: export to Excel
+        export_choice = input("Export results to Excel? (y/n): ").strip().lower()
+        if export_choice == 'y':
+            excel_exporter = ExcelReportGenerator()
+            filename = excel_exporter.export_to_excel(results, 'quick_test')
+            print(f"Results exported to: {filename}")
     else:
-        print("\nNo signals found in recent data.")
+        print("❌ No trades generated in quick test.")
+
+def manage_cache():
+    """Cache management menu"""
+    print("\n--- CACHE MANAGEMENT ---")
+    
+    data_fetcher = PolygonDataFetcher()
+    
+    while True:
+        print("\nCache Options:")
+        print("1. View Cache Info")
+        print("2. Clear Specific Ticker Cache")
+        print("3. Clear All Cache")
+        print("4. Back to Main Menu")
+        
+        cache_choice = input("Select option (1-4): ").strip()
+        
+        if cache_choice == '1':
+            print("\n--- CACHE INFORMATION ---")
+            data_fetcher.get_cache_info()
+        
+        elif cache_choice == '2':
+            ticker = input("Enter ticker to clear cache for: ").strip().upper()
+            if ticker:
+                data_fetcher.clear_cache(ticker)
+            else:
+                print("⚠️ Invalid ticker")
+        
+        elif cache_choice == '3':
+            confirm = input("Are you sure you want to clear ALL cache? (y/n): ").strip().lower()
+            if confirm == 'y':
+                data_fetcher.clear_cache()
+            else:
+                print("Cache clearing cancelled")
+        
+        elif cache_choice == '4':
+            break
+        
+        else:
+            print("Invalid option! Please select 1-4.")
+        
+        if cache_choice != '4':
+            input("\nPress Enter to continue...")
+            print()  # Extra line for readability
 
 def check_setup():
     """Check if system is properly configured"""
@@ -247,7 +303,7 @@ def main():
     
     while True:
         print_menu()
-        choice = input("\nSelect option (1-7): ").strip()
+        choice = input("\nSelect option (1-8): ").strip()
         
         try:
             if choice == '1':
@@ -263,10 +319,12 @@ def main():
             elif choice == '6':
                 quick_test()
             elif choice == '7':
+                manage_cache()
+            elif choice == '8':
                 print("Thank you for using the Trading Backtest System!")
                 break
             else:
-                print("Invalid option! Please select 1-7.")
+                print("Invalid option! Please select 1-8.")
         
         except KeyboardInterrupt:
             print("\n\nProgram interrupted by user.")

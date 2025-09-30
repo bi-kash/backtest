@@ -24,7 +24,7 @@ A comprehensive backtesting system for trading strategies with focus on short-bi
 
 ```bash
 # Install required packages (already done)
-pip install pandas requests openpyxl polygon-api-client numpy yfinance
+pip install -r requirements.txt
 
 # Get a Polygon.io API key (optional, system will use Yahoo Finance as fallback)
 # Sign up at https://polygon.io
@@ -52,9 +52,10 @@ POLYGON_API_KEY=your_actual_api_key_here
 python main.py
 ```
 
-### 4. Easy Excel Configuration
+### 4. Changing Configuration
+You can edit parameter in the file called config.py to update strategy parameters
 
-The system creates `strategy_parameters_template.xlsx` where you can modify all strategy parameters without coding.
+The system creates `strategy_parameters_template.xlsx` where you can view all strategy parameters.
 
 ## Excel Output Columns
 
@@ -66,7 +67,7 @@ The system exports results with exactly the columns you requested:
 - `Mistake Tag`, `Pattern Notes`
 - **Additional:** `Gap %`, `Dollar Block`, `Target Hit`, `Stop Hit`
 
-## Strategy Parameters (Easy to Modify)
+## Strategy Parameters (Easy to Modify in config.py file)
 
 ### Gap Up Short Strategy
 
@@ -292,17 +293,12 @@ Each strategy is in `strategies.py` with clear logic. You can:
 
 This system is designed to be self-contained and user-friendly. Key files to modify:
 
-1. **config.py** - All parameters
+1. **config.py** - All parameters that can be updated
 2. **main.py** - User interface
-3. **Excel templates** - Parameter modification
+3. **Excel output** - Result of backtesting
 
 For advanced customization, the code is well-commented and modular.
 
-## Performance Notes
 
-- **Data Fetching**: ~1-2 seconds per ticker
-- **Strategy Processing**: Nearly instantaneous
-- **Excel Export**: ~5-10 seconds for large datasets
-- **Memory Usage**: Minimal, handles 100+ tickers easily
 
-Start with the Quick Test option to verify everything works, then customize parameters based on your trading style!
+**Note:** Start with the Quick Test option to verify everything works, then customize parameters in config.py based on your trading style!

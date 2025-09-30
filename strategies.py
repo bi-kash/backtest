@@ -152,9 +152,14 @@ class FirstRedDayStrategy(TradingStrategy):
                         target_hit = True
                         break
                     
-                    # If neither hit, use the close of this day as potential exit
+                    # If neither hit, update exit_price to this day's close (will be final if no target/stop hit)
                     exit_price = future_day['close']
-                    exit_reason = 'market_close'
+                    exit_reason = 'timeout_close'
+                
+                # If we never entered the loop (no future days), use current day close
+                if exit_price == entry_price and exit_reason == 'timeout':
+                    exit_price = current_day['close']
+                    exit_reason = 'same_day_close'
                 
                 signal = {
                     'date': current_day['date'],
@@ -246,9 +251,14 @@ class ExtendedGapDownStrategy(TradingStrategy):
                             target_hit = True
                             break
                         
-                        # If neither hit, use the close of this day as potential exit
+                        # If neither hit, update exit_price to this day's close (will be final if no target/stop hit)
                         exit_price = future_day['close']
-                        exit_reason = 'market_close'
+                        exit_reason = 'timeout_close'
+                    
+                    # If we never entered the loop (no future days), use current day close
+                    if exit_price == entry_price and exit_reason == 'timeout':
+                        exit_price = current_day['close']
+                        exit_reason = 'same_day_close'
                 
                 signal = {
                     'date': current_day['date'],
@@ -404,9 +414,14 @@ class MultiDayBreakoutStrategy(TradingStrategy):
                             stop_hit = True
                             break
                         
-                        # If neither hit, use the close of this day as potential exit
+                        # If neither hit, update exit_price to this day's close (will be final if no target/stop hit)
                         exit_price = future_day['close']
-                        exit_reason = 'market_close'
+                        exit_reason = 'timeout_close'
+                    
+                    # If we never entered the loop (no future days), use current day close
+                    if exit_price == entry_price and exit_reason == 'timeout':
+                        exit_price = current_day['close']
+                        exit_reason = 'same_day_close'
                 
                 signal = {
                     'date': current_day['date'],
