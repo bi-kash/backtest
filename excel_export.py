@@ -325,7 +325,9 @@ class ExcelReportGenerator:
         # Create a user-friendly parameter modification sheet
         param_data = []
         
-        for strategy_name, params in Config.STRATEGIES.items():
+        # Use DEFAULT_STRATEGIES to ensure we always get the hardcoded defaults,
+        # not the potentially Excel-loaded values
+        for strategy_name, params in Config.DEFAULT_STRATEGIES.items():
             param_data.append({
                 'Strategy': strategy_name.replace('_', ' ').title(),
                 'Parameter': 'Enabled',
