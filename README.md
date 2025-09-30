@@ -20,17 +20,61 @@ A comprehensive backtesting system for trading strategies with focus on short-bi
 
 ## Quick Start
 
-### 1. Setup
+### 1. Python Installation
+
+**Download Python 3.13.3** from: https://www.python.org/downloads/release/python-3133/
+
+Go to the bottom of the page and choose according to your OS:
+
+#### Windows:
+
+1. Download `python-3.13.3-amd64.exe` (64-bit) or `python-3.13.3.exe` (32-bit)
+2. **IMPORTANT**: ✅ Check "Add Python to PATH" during installation
+3. Run installer as Administrator
+4. Most likely you do not need to create aliashes in windows
+
+#### macOS:
+
+1. Download `python-3.13.3-macos11.pkg`
+2. Run the installer
+
+**Create aliases:**
 
 ```bash
-# Install required packages (already done)
+# For Zsh (default shell):
+nano ~/.zshrc
+
+# Add these lines:
+alias python='python3'
+alias pip='pip3'
+
+# Save and reload:
+source ~/.zshrc
+```
+
+#### Linux (Ubuntu/Debian):
+
+```bash
+sudo apt update
+sudo apt install python3.13 python3.13-pip python3.13-venv
+
+# Create aliases:
+echo "alias python='python3.13'" >> ~/.bashrc
+echo "alias pip='pip3'" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 2. Project Setup
+
+```bash
+# Install required packages
 pip install -r requirements.txt
 
 # Get a Polygon.io API key (optional, system will use Yahoo Finance as fallback)
 # Sign up at https://polygon.io
 ```
 
-### 2. Configure API Key
+### 3. Configure API Key
 
 Create a `.env` file in the project root (copy from `.env.example`):
 
@@ -46,13 +90,14 @@ POLYGON_API_KEY=your_actual_api_key_here
 
 **Important: Never commit the `.env` file to version control!**
 
-### 3. Run the System
+### 4. Run the System
 
 ```bash
 python main.py
 ```
 
 ### 4. Changing Configuration
+
 You can edit parameter in the file called config.py to update strategy parameters
 
 The system creates `strategy_parameters_template.xlsx` where you can view all strategy parameters.
@@ -298,7 +343,5 @@ This system is designed to be self-contained and user-friendly. Key files to mod
 3. **Excel output** - Result of backtesting
 
 For advanced customization, the code is well-commented and modular.
-
-
 
 **Note:** Start with the Quick Test option to verify everything works, then customize parameters in config.py based on your trading style!
