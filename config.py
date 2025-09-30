@@ -140,9 +140,10 @@ class Config:
             
             # Parse the Excel structure into our STRATEGIES dict
             current_strategy = None
+            warnings = []
             
             # Skip header row, start from row 2
-            for row in ws.iter_rows(min_row=2, values_only=True):
+            for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
                 strategy_name, parameter_name, current_value, _, _ = row
                 
                 # When we see a strategy name, map it to our internal key
@@ -159,10 +160,30 @@ class Config:
                     # Convert "Min Gap Percent" to "min_gap_percent"
                     param_key = parameter_name.lower().replace(' ', '_')
                     
+                    # Validate parameter value
+                    if current_value is None:
+                        warnings.append(f"Row {row_num}: {parameter_name} has no value, using default")
+                        # Use default value
+                        if current_strategy in Config.DEFAULT_STRATEGIES:
+                            current_value = Config.DEFAULT_STRATEGIES[current_strategy].get(param_key)
+                    
+                    # Basic type validation for numeric parameters
+                    if 'percent' in param_key or 'millions' in param_key or 'days' in param_key or 'ratio' in param_key:
+                        if not isinstance(current_value, (int, float, bool)):
+                            warnings.append(f"Row {row_num}: {parameter_name} should be numeric, got {type(current_value).__name__}")
+                    
                     # Store the value with proper type
                     Config.STRATEGIES[current_strategy][param_key] = current_value
             
             print(f"✓ Parameters loaded from Excel file: {filename}")
+            
+            if warnings:
+                print("\n⚠️  Warnings during parameter loading:")
+                for warning in warnings[:5]:  # Show max 5 warnings
+                    print(f"   • {warning}")
+                if len(warnings) > 5:
+                    print(f"   • ... and {len(warnings) - 5} more warnings")
+            
             print("  To use config.py defaults instead, rename or delete the Excel file.")
             return True
             

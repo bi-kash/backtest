@@ -1,0 +1,107 @@
+
+================================================================================
+ DEMONSTRATION: Parameter Loading for Backtesting
+================================================================================
+
+📝 QUESTION: Where does the system read parameters from for actual backtesting?
+
+💡 ANSWER: The system reads parameters in this priority:
+   1st Priority: Excel file (strategy_parameters_template.xlsx) - IF IT EXISTS
+   2nd Priority: config.py - IF Excel file doesn't exist
+
+================================================================================
+ DEMO 1: No Excel File - Uses config.py Defaults
+================================================================================
+
+[System] Importing config...
+Excel parameter file 'strategy_parameters_template.xlsx' not found. Using config.py defaults.
+
+[Result] Parameters loaded:
+  • Gap Up Short - min_gap_percent: 70
+  • Gap Up Short - min_volume_millions: 1
+  • First Red Day - min_green_days: 20
+
+================================================================================
+ DEMO 2: Creating Excel Template
+================================================================================
+
+[System] Creating parameter template...
+Parameter template created: strategy_parameters_template.xlsx
+
+[Excel] Instructions sheet created with usage guide
+[Excel] Parameters sheet created with all strategy parameters
+
+================================================================================
+ DEMO 3: Excel File Exists - Uses Excel Parameters
+================================================================================
+
+[System] Importing config again...
+✓ Parameters loaded from Excel file: strategy_parameters_template.xlsx
+  To use config.py defaults instead, rename or delete the Excel file.
+
+[Result] Parameters loaded (same as before, Excel has default values):
+  • Gap Up Short - min_gap_percent: 70
+
+================================================================================
+ DEMO 4: Modifying Excel and Reloading
+================================================================================
+
+[User] Opening Excel file...
+[User] Changing min_gap_percent from 70 to 120...
+[User] Changing min_green_days from 20 to 15...
+[User] Saving Excel file...
+
+[System] Restarting program (reloading config)...
+✓ Parameters loaded from Excel file: strategy_parameters_template.xlsx
+  To use config.py defaults instead, rename or delete the Excel file.
+
+[Result] NEW Parameters loaded from Excel:
+  • Gap Up Short - min_gap_percent: 120 ← Changed!
+  • First Red Day - min_green_days: 15 ← Changed!
+
+================================================================================
+ DEMO 5: Strategies Use Excel Parameters for Backtesting
+================================================================================
+
+[Strategy] Gap Up Short strategy initialized:
+  • Uses min_gap_percent: 120
+
+[Strategy] First Red Day strategy initialized:
+  • Uses min_green_days: 15
+
+[Backtest] When backtesting runs, these are the values it will use!
+
+================================================================================
+ ✅ SUMMARY
+================================================================================
+
+For actual backtesting, parameters are read from:
+
+    ┌─────────────────────────────────────────────────┐
+    │  Does strategy_parameters_template.xlsx exist?  │
+    └──────────────────┬──────────────────────────────┘
+                       │
+           ┌───────────┴───────────┐
+           │                       │
+          YES                     NO
+           │                       │
+           ▼                       ▼
+    ┌──────────────┐      ┌──────────────┐
+    │  EXCEL FILE  │      │  CONFIG.PY   │
+    │              │      │              │
+    │ Read params  │      │ Use defaults │
+    │ from Excel   │      │ from code    │
+    └──────┬───────┘      └──────┬───────┘
+           │                     │
+           └──────────┬──────────┘
+                      │
+                      ▼
+           ┌────────────────────┐
+           │   STRATEGIES use   │
+           │ Config.STRATEGIES  │
+           │                    │
+           │  Backtesting runs  │
+           └────────────────────┘
+
+📖 See PARAMETER_LOADING.md for complete documentation
+
